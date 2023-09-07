@@ -12,7 +12,7 @@ import org.kainos.ea.cli.SalesEmployee;
 
 import java.util.List;
 
-public class git EmployeeService {
+public class EmployeeService {
 
     private EmployeeDao employeeDao = new EmployeeDao();
 
