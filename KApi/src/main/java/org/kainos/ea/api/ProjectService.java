@@ -17,85 +17,74 @@ public class ProjectService {
     public List<Project> getAllProjects() throws FailedToGetProjectsException {
         try {
             List<Project> projectList = projectDao.getAllProjects();
-
             return projectList;
-    } catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToGetProjectsException();
         }
     }
 
-    public Project getProjectById(int id) throws FailedToGetProjectsException, ProjectDoesNotExistException {
+    public Project getProjectById(int id) throws FailedToGetProjectByIdException, ProjectDoesNotExistException {
         try {
             Project project = projectDao.getProjectById(id);
-
             if (project == null) {
                 throw new ProjectDoesNotExistException();
             }
-
-        return project;
-    } catch (SQLException e) {
+            return project;
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-
-            throw new FailedToGetProjectsException();
+            throw new FailedToGetProjectByIdException();
         }
     }
 
     public void assignDeliveryEmployee(int employeeId, int projectId) throws FailedToGetDeliveryEmployeeException, FailedToAssignDeliveryEmployeeException {
         try {
-            DeliveryEmployee deliveryEmployeeToAssign = employeeDao.getEmployeeById(id);
-
+            DeliveryEmployee deliveryEmployeeToAssign = employeeDao.getEmployeeById(employeeId);
             if (deliveryEmployeeToAssign == null) {
                 throw new DeliveryEmployeeDoesNotExistException();
             }
 
-            projectDao.updateProject(projectId);
-        } catch (SQLException e) {
+            projectDao.assignDeliveryEmployeeToProject(employeeId, projectId);
+        } catch (SQLException | DeliveryEmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-
-            throw new FailedToUpdateProjectException();
+            throw new FailedToAssignDeliveryEmployeeException();
         }
 
     }
 
-    public void removeDeliveryEmployee(int employeeId, int projectId) throws FailedToRemoveDeliveryEmployeeException {
+    public void removeDeliveryEmployee(int employeeId, int projectId) throws FailedToRemoveDeliveryEmployeeException, FailedToUpdateProjectException {
         try {
-            DeliveryEmployee deliveryEmployeeToRemove = employeeDao.getEmployeeById(id);
-
+            DeliveryEmployee deliveryEmployeeToRemove = employeeDao.getEmployeeById(employeeId);
             if (deliveryEmployeeToRemove == null) {
                 throw new DeliveryEmployeeDoesNotExistException();
             }
 
-            projectDao.updateProject(projectId);
-        } catch (SQLException e) {
+            projectDao.removeDeliveryEmployeeFromProject(employeeId, projectId);
+        } catch (SQLException | DeliveryEmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToUpdateProjectException();
         }
 
     }
 
-    public void assignClientToProject(int clientId, int projectId) throws FailedToGetClientException, FailedToAssignClientToProjectException {
+    public void assignClientToProject(int clientId, int projectId) throws FailedToGetClientException, FailedToAssignClientToProjectException, FailedToUpdateProjectException {
         try {
-            Client clientToAssign = ClientDao.getClientById(id);
-
+            Client clientToAssign = clientDao.getClientById(clientId);
             if (clientToAssign == null) {
                 throw new ClientDoesNotExistException();
             }
 
-            projectDao.updateProject(projectId);
-        } catch (SQLException e) {
+            projectDao.assignClientToProject(clientId, projectId);
+        } catch (SQLException | ClientDoesNotExistException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToUpdateProjectException();
         }
 
     }
 
-    public List<Project> getAllProjectsAssignedToClient(int clientId) throws FailedToGetAllProjectsAssignedToClientException {
+    public List<Project> getAllProjectsAssignedToClient(int clientId) throws FailedToGetAllProjectsAssignedToClientException, FailedToGetProjectsAssignedToClientException {
         try {
-            List<Project> projectsAssignedToClientList = projectDao.getAllProjectsAssignedToClient();
+            List<Project> projectsAssignedToClientList = projectDao.getAllProjectsAssignedToClient(clientId);
 
             return projectsAssignedToClientList;
         } catch (SQLException e) {
@@ -105,10 +94,10 @@ public class ProjectService {
         }
     }
 
-    public double sumClientProjectValue() throws FailedToGetClientProjectValueException {
+    public double sumClientProjectValue() throws FailedToGetClientProjectValueException, FailedToGetTotalValueOfProjectsException {
         try {
-            double totalValue = calculateTotalValue();
-            return totalValue;
+            double totalValueOfProjects = calculateTotalValue();
+            return totalValueOfProjects;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
 
@@ -116,40 +105,35 @@ public class ProjectService {
         }
     }
 
-    public boolean setProjectAsCompleted() throws FailedToSetProjectAsCompletedException {
+    public boolean setProjectAsCompleted(int projectId) throws FailedToSetProjectAsCompletedException {
         try {
-            return true;
+            return projectDao.setProjectAsCompleted(projectId);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToSetProjectAsCompletedException();
         }
     }
 
-    public void assignTechLeadToProject(int techLeadId) throws FailedToAssignTechLeadToProjectException {
+    public void assignTechLeadToProject(int techLeadId, int projectId) throws FailedToAssignTechLeadToProjectException, FailedToUpdateProjectException {
         try {
-            Employee TechLeadToAssign = clientDao.getTechLeadById;
-
+            Employee techLeadToAssign = clientDao.getTechLeadById(techLeadId);
             if (techLeadToAssign == null) {
                 throw new NoTechLeadAvailableException();
             }
-            projectDao.updateProject(projectId);
-        } catch (SQLException e) {
+            projectDao.assignTechLeadToProject(techLeadId, projectId);
+        } catch (SQLException | NoTechLeadAvailableException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToUpdateProjectException();
         }
 
     }
 
-    public List<DeliveryEmployee> getAllDeliveryEmployeesAssignedToProject() throws FailedToGetDeliveryEmployeesAssignedToProjectsException {
+    public List<DeliveryEmployee> getAllDeliveryEmployeesAssignedToProject(int projectId) throws FailedToGetDeliveryEmployeesAssignedToProjectsException, FailedToGetDeliveryEmployeesAssignedToProject {
         try {
-            List<DeliveryEmployee> deliveryEmployeeListAssignedToProject = employeeDao.getAllDeliveryEmployeesAssignedToProject();
-
-        return deliveryEmployeeListAssignedToProject;
-    } catch (SQLException e) {
+            List<DeliveryEmployee> deliveryEmployeeListAssignedToProject = employeeDao.getAllDeliveryEmployeesAssignedToProject(projectId);
+            return deliveryEmployeeListAssignedToProject;
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToGetDeliveryEmployeesAssignedToProject();
         }
     }

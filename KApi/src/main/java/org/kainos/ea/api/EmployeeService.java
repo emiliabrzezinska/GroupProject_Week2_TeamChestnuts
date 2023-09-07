@@ -52,9 +52,9 @@ public class git EmployeeService {
         }
     }
 
-    public Employee getEmployeeById(int, employeeId) throws FailedToGetEmployeeByIdException {
+    public Employee getEmployeeById(int employeeId) throws FailedToGetEmployeeByIdException {
         try {
-            Employee employee = employeeDao.getEmployeeById(id);
+            Employee employee = employeeDao.getEmployeeById(employeeId);
 
             if (employee == null) {
                 throw new FailedToGetEmployeeByIdException();
@@ -68,11 +68,9 @@ public class git EmployeeService {
         }
     }
 
-    public DeliveryEmployee getDeliveryEmployeeById(int, deliveryEmployeeId)
-
-    FailedToGetDeliveryEmployeeByIdException {
+    public DeliveryEmployee getDeliveryEmployeeById(int deliveryEmployeeId) throws FailedToGetDeliveryEmployeeByIdException {
         try {
-            DeliveryEmployee deliveryEmployee = employeeDao.getDeliveryEmployeeById(id);
+            DeliveryEmployee deliveryEmployee = employeeDao.getDeliveryEmployeeById(deliveryEmployeeId);
 
             if (deliveryEmployee == null) {
                 throw new FailedToGetDeliveryEmployeeByIdException();
@@ -86,51 +84,48 @@ public class git EmployeeService {
         }
     }
 
-    public SalesEmployee getSalesEmployeeById(int, salesEmployeeId) throws
-            FailedToGetSalesEmployeeByIdException {
+    public SalesEmployee getSalesEmployeeById(int salesEmployeeId) throws FailedToGetSalesEmployeeByIdException {
         try {
-            SalesEmployee salesEmployee = employeeDao.getSalesEmployeeById(id);
+            SalesEmployee salesEmployee = employeeDao.getSalesEmployeeById(salesEmployeeId);
 
             if (salesEmployee == null) {
                 throw new FailedToGetSalesEmployeeByIdException();
             }
 
             return salesEmployee;
-        } catch (FailedToGetSalesEmployeeByIdException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetSalesEmployeeByIdException();
         }
     }
 
-    public void updateEmployee(int, employeeId, EmployeeRequest employee) throws
-            FailedToUpdateEmployeeException {
+    public void updateEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateEmployeeException {
         try {
-            Employee employeeToUpdate = employeeDao.getEmployeeById(id);
+            Employee employeeToUpdate = employeeDao.getEmployeeById(employeeId);
 
             if (employeeToUpdate == null) {
                 throw new EmployeeDoesNotExistException();
             }
 
-            employeeDao.updateEmployee(id, employee);
-        } catch (SQLException e) {
+            employeeDao.updateEmployee(employeeId, employee);
+        } catch (SQLException | EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToUpdateEmployeeException();
         }
 
     }
 
-    public void deleteEmployee(int, employeeId) throws FailedToDeleteEmployeeException {
+    public void deleteEmployee(int employeeId) throws FailedToDeleteEmployeeException {
         try {
-            Employee employeeToDelete = employeeDao.getEmployeeById(id);
+            Employee employeeToDelete = employeeDao.getEmployeeById(employeeId);
 
             if (employeeToDelete == null) ;
             {
                 throw new FailedToDeleteEmployeeException();
             }
-            employeeDao.updateEmployee(id, employee);
+            employeeDao.deleteEmployee(employeeId);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
             throw new FailedToDeleteEmployeeException();
         }
 

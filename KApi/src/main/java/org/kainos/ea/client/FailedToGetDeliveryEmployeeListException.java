@@ -1,4 +1,4 @@
 package org.kainos.ea.client;
 
-public class FailedToGetDeliveryEmployeeListException {
+public class FailedToGetDeliveryEmployeeListException extends Throwable {
 }

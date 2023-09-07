@@ -1,4 +1,4 @@
 package org.kainos.ea.client;
 
-public class FailedToUpdateEmployeeException {
+public class FailedToUpdateEmployeeException extends Throwable {
 }
