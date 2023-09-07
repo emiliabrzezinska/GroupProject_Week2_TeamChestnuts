@@ -1,5 +1,7 @@
 package org.kainos.ea.api;
 
+import org.kainos.ea.client.*;
+
 import java.sql.SQLException;
 
 public class ProjectService {
@@ -20,7 +22,7 @@ public class ProjectService {
         try {
             Project project = projectDao.getProjectById(id);
 
-            if (product == null) {
+            if (project == null) {
                 throw new ProjectDoesNotExistException();
             }
 
@@ -49,7 +51,7 @@ public class ProjectService {
 
     }
 
-    public void removeDeliveryEmployee(int employeeId, int projectId) throws FailedToGetDeliveryEmployeeException, FailedToRemoveDeliveryEmployeeException {
+    public void removeDeliveryEmployee(int employeeId, int projectId) throws FailedToRemoveDeliveryEmployeeException {
         try {
             DeliveryEmployee deliveryEmployeeToRemove = employeeDao.getEmployeeById(id);
 
