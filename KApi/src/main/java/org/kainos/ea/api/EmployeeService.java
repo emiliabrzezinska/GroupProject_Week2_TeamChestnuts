@@ -1,5 +1,9 @@
 package org.kainos.ea.api;
 
+import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.Employee;
+import org.kainos.ea.cli.SalesEmployee;
+
 import java.util.List;
 
 public class git EmployeeService {
