@@ -1,5 +1,11 @@
 package org.kainos.ea.api;
 
+import org.kainos.ea.cli.Client;
+import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.Project;
+
+import java.util.List;
+
 public class ProjectService {
 
     public Project getProjectById(int id) {
