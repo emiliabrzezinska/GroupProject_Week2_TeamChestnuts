@@ -102,7 +102,6 @@ public class EmployeeDao {
         st.setString(1, employee.getName());
         st.setDouble(2, employee.getSalary());
         st.setDouble(3, employee.getBankAccountNumber());
-        st.setDouble(2, employee.getCommissionRate());
         st.setInt(4, id);
 
         st.executeUpdate();
