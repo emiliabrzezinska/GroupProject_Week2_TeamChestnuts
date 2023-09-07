@@ -45,7 +45,7 @@ public class EmployeeDao {
         return SalesEmployeeList;
     }
 
-    public List<DeliveryEmployee> getDeliveryEmployeeById(int id) throws SQLException{
+    public DeliveryEmployee getDeliveryEmployeeById(int id) throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
@@ -62,7 +62,7 @@ public class EmployeeDao {
         return null;
     }
 
-    public List<SalesEmployee> getSalesEmployeeById(int id) throws SQLException{
+    public SalesEmployee getSalesEmployeeById(int id) throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId WHERE Employee.ID=" +id);
