@@ -105,7 +105,7 @@ public class EmployeeDao {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
-
+        
 
         while (rs.next()){
             return new DeliveryEmployee(

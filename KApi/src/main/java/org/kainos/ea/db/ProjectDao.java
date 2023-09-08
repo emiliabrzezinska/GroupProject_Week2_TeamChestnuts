@@ -1,5 +1,7 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.Report;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,6 @@ public class ProjectDao {
         }
         return reportList;
     }
-
 
 
 
