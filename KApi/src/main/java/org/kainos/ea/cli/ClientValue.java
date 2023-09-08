@@ -1,11 +1,13 @@
 package org.kainos.ea.cli;
 
 public class ClientValue {
-    public ClientValue(String name, Double salary) {
-        Name = name;
-        Salary = salary;
-    }
 
     private String Name;
-    private Double Salary;
+    private double Value;
+    public ClientValue(String name, double value) {
+        Name = name;
+        Value = value;
+    }
+
+
 }

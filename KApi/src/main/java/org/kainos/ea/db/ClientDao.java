@@ -1,5 +1,8 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.ClientValue;
+import org.kainos.ea.cli.Report;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
