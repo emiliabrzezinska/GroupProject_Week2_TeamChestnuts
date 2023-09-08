@@ -1,9 +1,15 @@
 package org.kainos.ea.cli;
 
-public class SalesEmployee {
-    private float comissionRate;
+public class SalesEmployee extends Employee {
+    int employeeId;
+    String name;
+    float salary;
+    String bankAccountNumber;
+    String nationalInsuranceNumber;
+    float comissionRate;
 
-    public SalesEmployee(float comissionRate) {
+    public SalesEmployee(int employeeId, String name, float salary, String bankAccountNumber, String nationalInsuranceNumber, float comissionRate) {
+        super(employeeId, name, salary, bankAccountNumber, nationalInsuranceNumber);
         setComissionRate(comissionRate);
     }
 

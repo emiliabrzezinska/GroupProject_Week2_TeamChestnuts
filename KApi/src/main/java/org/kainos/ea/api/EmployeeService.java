@@ -1,14 +1,11 @@
 package org.kainos.ea.api;
 
 
-import org.kainos.ea.cli.EmployeeRequest;
+import org.kainos.ea.cli.*;
 import org.kainos.ea.client.*;
 
 import java.sql.SQLException;
 
-import org.kainos.ea.cli.DeliveryEmployee;
-import org.kainos.ea.cli.Employee;
-import org.kainos.ea.cli.SalesEmployee;
 import org.kainos.ea.db.EmployeeDao;
 
 
@@ -17,6 +14,32 @@ import java.util.List;
 public class EmployeeService {
 
     private EmployeeDao employeeDao = new EmployeeDao();
+
+    public int createDeliveryEmployee(EmployeeRequest employee) throws FailedToCreateDeliveryEmployeeException {
+        try {
+            int id = employeeDao.createEmployee(employee);
+            if (id == -1) {
+                throw new FailedToCreateDeliveryEmployeeException();
+            }
+            return id;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToCreateDeliveryEmployeeException();
+        }
+    }
+
+    public int createSalesEmployee(SalesEmployeeRequest employee) throws FailedToCreateSalesEmployeeException {
+        try {
+            int id = employeeDao.createEmployee(employee);
+            if (id == -1) {
+                throw new FailedToCreateSalesEmployeeException();
+            }
+            return id;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToCreateSalesEmployeeException();
+        }
+    }
 
     public List<Employee> getAllEmployees() throws FailedToGetEmployeeListException {
         try {
@@ -101,18 +124,34 @@ public class EmployeeService {
         }
     }
 
-    public void updateEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateEmployeeException {
+    public void updateDeliveryEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateDeliveryEmployeeException {
         try {
-            Employee employeeToUpdate = employeeDao.getEmployeeById(employeeId);
+            Employee deliveryEmployeeToUpdate = employeeDao.getEmployeeById(employeeId);
 
-            if (employeeToUpdate == null) {
+            if (deliveryEmployeeToUpdate == null) {
                 throw new EmployeeDoesNotExistException();
             }
 
-            employeeDao.updateEmployee(employeeId, employee);
+            employeeDao.updateDeliveryEmployee(employeeId, employee);
         } catch (SQLException | EmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
-            throw new FailedToUpdateEmployeeException();
+            throw new FailedToUpdateDeliveryEmployeeException();
+        }
+
+    }
+
+    public void updateSalesEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateSalesEmployeeException {
+        try {
+            Employee salesEmployeeToUpdate = employeeDao.getEmployeeById(employeeId);
+
+            if (salesEmployeeToUpdate == null) {
+                throw new EmployeeDoesNotExistException();
+            }
+
+            employeeDao.updateSalesEmployee(employeeId, employee);
+        } catch (SQLException | EmployeeDoesNotExistException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToUpdateSalesEmployeeException();
         }
 
     }

@@ -1,9 +1,12 @@
 package org.kainos.ea.db;
 
 import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.Employee;
+import org.kainos.ea.cli.SalesEmployee;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeDao {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
@@ -19,7 +22,7 @@ public class EmployeeDao {
             DeliveryEmployee deliveryEmployee = new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber")
             );
@@ -59,7 +62,7 @@ public class EmployeeDao {
             return new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber")
             );
@@ -107,7 +110,7 @@ public class EmployeeDao {
 
         st.setString(1, employee.getName());
         st.setDouble(2, employee.getSalary());
-        st.setDouble(3, employee.getBankAccountNumber());
+        st.setString(3, employee.getBankAccountNumber());
         st.setInt(4, id);
 
         st.executeUpdate();

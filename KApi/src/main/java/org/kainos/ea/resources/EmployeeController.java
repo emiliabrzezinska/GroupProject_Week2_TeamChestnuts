@@ -2,6 +2,7 @@ package org.kainos.ea.resources;
 
 import io.swagger.annotations.Api;
 import org.kainos.ea.api.EmployeeService;
+import org.kainos.ea.api.ProjectService;
 import org.kainos.ea.cli.DeliveryEmployeeRequest;
 import org.kainos.ea.cli.Employee;
 import org.kainos.ea.cli.EmployeeRequest;
@@ -10,30 +11,37 @@ import org.kainos.ea.client.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Api("Engineering Academy Dropwizard Product API")
 @Path("/api")
 public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
+    private ProjectService projectService = new ProjectService();
 
-
-//    @POST
-//    @Path("/employees/delivery")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response createDeliveryEmployee(Employee employee) {
-//        return Response.ok(employeeService.cre
-//    }
+    @POST
+    @Path("/employees/delivery")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createDeliveryEmployee(DeliveryEmployeeRequest employee) throws FailedToCreateDeliveryEmployeeException {
+        try {
+            return Response.ok(employeeService.createDeliveryEmployee(employee)).build();
+        } catch (FailedToCreateDeliveryEmployeeException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 
     @PUT
     @Path("/employees/delivery/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateDeliveryEmployee(@PathParam("id") int id, EmployeeRequest employee) throws FailedToUpdateEmployeeException {
+    public Response updateDeliveryEmployee(@PathParam("id") int id, DeliveryEmployeeRequest employee) throws FailedToUpdateEmployeeException {
         try {
-            employeeService.updateEmployee(id, employee);
+            employeeService.updateDeliveryEmployee(id, employee);
             return Response.ok().build();
-        } catch (FailedToUpdateEmployeeException e) {
+        } catch (FailedToUpdateDeliveryEmployeeException e) {
             System.err.println(e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+
         }
     }
 
@@ -54,22 +62,38 @@ public class EmployeeController {
     @Path("/employees/delivery")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDeliveryEmployees() throws FailedToGetDeliveryEmployeeListException {
-        return Response.ok(employeeService.getAllDeliveryEmployees()).build();
+        try {
+            return Response.ok(employeeService.getAllDeliveryEmployees()).build();
+        } catch (FailedToGetDeliveryEmployeeListException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 
     @DELETE
     @Path("/employees/delivery/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteDeliveryEmployee(@PathParam("id") int id) throws FailedToDeleteEmployeeException {
-        employeeService.deleteEmployee(id);
-        return Response.ok().build();
+        try {
+            employeeService.deleteEmployee(id);
+            return Response.ok().build();
+        } catch (FailedToDeleteEmployeeException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 
-//    @PUT
-//    @Path("/projects/{id}/delivery")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response assignDeliveryEmployee(@PathParam("id") int id, Employee employee) {
-//        employeeService.(id);
-//        return Response.ok().build();
-//    }
+    @PUT
+    @Path("/projects/{id}/delivery")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response assignDeliveryEmployee(@PathParam("id") int employeeId, int projectId, DeliveryEmployeeRequest employee, List<Integer> projectIdList) throws FailedToUpdateDeliveryEmployeeException, FailedToAssignDeliveryEmployeeException, FailedToGetDeliveryEmployeeException {
+        try {
+            employeeService.updateDeliveryEmployee(employeeId, employee);
+            projectService.assignDeliveryEmployees(projectIdList, projectId);
+            return Response.ok().build();
+        } catch (FailedToUpdateDeliveryEmployeeException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 }
