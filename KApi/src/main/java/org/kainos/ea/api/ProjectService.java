@@ -5,6 +5,10 @@ import org.kainos.ea.client.*;
 
 import java.sql.SQLException;
 
+
+import org.kainos.ea.cli.Client;
+import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.Project;
 import org.kainos.ea.db.ClientDao;
 import org.kainos.ea.db.EmployeeDao;
 import org.kainos.ea.db.ProjectDao;
