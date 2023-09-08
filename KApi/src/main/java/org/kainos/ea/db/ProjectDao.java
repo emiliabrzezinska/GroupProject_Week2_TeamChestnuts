@@ -11,7 +11,7 @@ public class ProjectDao {
 
     public int assignDeliveryEmployees(int ProjectId, List<Integer> EmployeeIds) throws SQLException {
         Connection c = databaseConnector.getConnection();
-        for ( int EmployeeId : EmployeeIds) {
+        for (int EmployeeId : EmployeeIds) {
             String insertStatement = "INSERT INTO Project_DeliveryEmployee (ProjectId, EmployeeId, IsActive) VALUES (?,?,?)";
             PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
 
@@ -29,7 +29,7 @@ public class ProjectDao {
         return -1;
     }
 
-    public void removeEmployee (int ProjectId, int EmployeeId) throws SQLException{
+    public void removeEmployee(int ProjectId, int EmployeeId) throws SQLException {
         Connection c = databaseConnector.getConnection();
 
         String updateStatement = "UPDATE Product SET IsActive = ? WHERE ProjectId= ? AND EmployeeId = ?";
@@ -42,10 +42,7 @@ public class ProjectDao {
     }
 
 
-
-
-
-    public void assignClientToProject(int ProjectId, int ClientId) throws SQLException{
+    public void assignClientToProject(int ProjectId, int ClientId) throws SQLException {
         Connection c = databaseConnector.getConnection();
 
         String updateStatement = "UPDATE Project SET ClientId = ? WHERE ProjectId = ? ";
@@ -56,7 +53,7 @@ public class ProjectDao {
         st.executeUpdate();
     }
 
-    public void setProjectAsCompleted(int ProjectId) throws SQLException{
+    public boolean setProjectAsCompleted(int ProjectId) throws SQLException {
         Connection c = databaseConnector.getConnection();
 
         String updateStatement = "UPDATE Project SET IsCompleted = ? WHERE ProjectId = ? ";
@@ -66,6 +63,7 @@ public class ProjectDao {
         st.setInt(2, ProjectId);
         st.executeUpdate();
 
+        return false;
     }
 
     public List<Report> getProjectReport() throws SQLException {
@@ -74,7 +72,7 @@ public class ProjectDao {
         ResultSet rs = st.executeQuery("SELECT Project.Id, Employee.Name, GROUP_CONCAT( DeliveryEmployee.EmployeeId SEPARATOR ' , ') as `DeliveryEmployees` FROM Project INNER JOIN Project_DeliveryEmployee ON Project.Id = Project_DeliveryEmployee.ProjectId INNER JOIN Employee ON Project.TechLeadId = Employee.Id GROUP BY Project.Id;");
         List<Report> reportList = new ArrayList<>();
 
-        while (rs.next()){
+        while (rs.next()) {
             Report report = new Report(
                     rs.getInt("Id"),
                     rs.getString("Name"),
