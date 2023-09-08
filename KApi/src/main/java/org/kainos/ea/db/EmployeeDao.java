@@ -6,6 +6,60 @@ import java.util.ArrayList;
 public class EmployeeDao {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
 
+    public int createDeliveryEmployee(EmployeeRequest employee) throws SQLException{
+        Connection c = databaseConnector.getConnection();
+        String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?)";
+        PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
+        st.setInt(1, employee.getId());
+        st.setString(2, employee.getName());
+        st.setFloat(3, employee.getSalary());
+        st.setString(4, employee.getBankAccountNumer());
+        st.setString(5, employee.getNationalInsuranceNumber());
+
+        st.executeUpdate();
+        ResultSet rs = st.getGeneratedKeys();
+        String insertStatement2 = "INSERT INTO DeliveryEmployee (EmployeeId) VALUES ( ? )";
+
+        if (rs.next()) {
+            int id = rs.getInt(1);
+            PreparedStatement st2 = c.prepareStatement(insertStatement2, Statement.RETURN_GENERATED_KEYS);
+            st2.setInt(1, id);
+            st2.executeUpdate();
+            return id;
+        }
+        return -1;
+
+    }
+
+    public int createSalesEmployee(SalesEmployeeRequest employee) throws SQLException{
+        Connection c = databaseConnector.getConnection();
+        String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?)";
+        PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
+        st.setInt(1, employee.getId());
+        st.setString(2, employee.getName());
+        st.setFloat(3, employee.getSalary());
+        st.setString(4, employee.getBankAccountNumer());
+        st.setString(5, employee.getNationalInsuranceNumber());
+        st.executeUpdate();
+        ResultSet rs = st.getGeneratedKeys();
+
+        String insertStatement2 = "INSERT INTO SalesEmployee (EmployeeId, CommissionRate) VALUES (?, ?)";
+
+
+        if (rs.next()) {
+            int id = rs.getInt(1);
+            PreparedStatement st2 = c.prepareStatement(insertStatement2, Statement.RETURN_GENERATED_KEYS);
+            st2.setInt(1, id);
+            st2.setFloat(2, employee.getCommissionRate());
+            st2.executeUpdate();
+            return id;
+        }
+        return -1;
+    }
+
+
+
+
 
     public List<DeliveryEmployee> getAllDeliveryEmployees() throws SQLException {
         Connection c = databaseConnector.getConnection();
@@ -17,7 +71,7 @@ public class EmployeeDao {
             DeliveryEmployee deliveryEmployee = new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber")
             );
@@ -36,7 +90,7 @@ public class EmployeeDao {
             SalesEmployee salesEmployee = new SalesEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber"),
                     rs.getDouble("CommissionRate")
@@ -50,14 +104,13 @@ public class EmployeeDao {
     public DeliveryEmployee getDeliveryEmployeeById(int id) throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT EmployeeId,  Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
-
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
 
         while (rs.next()){
             return new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber")
             );
@@ -74,7 +127,7 @@ public class EmployeeDao {
             return new SalesEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
-                    rs.getDouble("Salary"),
+                    rs.getFloat("Salary"),
                     rs.getString("BankAccountNumber"),
                     rs.getString("NationalInsuranceNumber"),
                     rs.getDouble("CommissionRate")
@@ -89,9 +142,9 @@ public class EmployeeDao {
         PreparedStatement st = c.prepareStatement(updateStatement);
 
         st.setString(1, employee.getName());
-        st.setDouble(2, employee.getSalary());
-        st.setDouble(3, employee.getBankAccountNumber());
-        st.setDouble(2, employee.getCommissionRate());
+        st.setFloat(2, employee.getSalary());
+        st.setString(3, employee.getBankAccountNumber());
+        st.setString(2, employee.getCommissionRate());
         st.setInt(4, id);
 
         st.executeUpdate();
@@ -104,9 +157,8 @@ public class EmployeeDao {
         PreparedStatement st = c.prepareStatement(updateStatement);
 
         st.setString(1, employee.getName());
-        st.setDouble(2, employee.getSalary());
-        st.setDouble(3, employee.getBankAccountNumber());
-        st.setDouble(2, employee.getCommissionRate());
+        st.setFloat(2, employee.getSalary());
+        st.setString(3, employee.getBankAccountNumber());
         st.setInt(4, id);
 
         st.executeUpdate();

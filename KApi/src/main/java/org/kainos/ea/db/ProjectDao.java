@@ -1,5 +1,7 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.Report;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +71,12 @@ public class ProjectDao {
     public List<Report> getProjectReport() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Project.Id, Employee.Name, GROUP_CONCAT( DeliveryEmployee.EmployeeId SEPARATOR ' , ') FROM Project INNER JOIN Project_DeliveryEmployee ON Project.Id = Project_DeliveryEmployee.ProjectId INNER JOIN Employee ON Project.TechLeadId = Employee.Id GROUP BY Project.Id;");
+        ResultSet rs = st.executeQuery("SELECT Project.Id, Employee.Name, GROUP_CONCAT( DeliveryEmployee.EmployeeId SEPARATOR ' , ') as 'DeliveryEmployees' FROM Project INNER JOIN Project_DeliveryEmployee ON Project.Id = Project_DeliveryEmployee.ProjectId INNER JOIN Employee ON Project.TechLeadId = Employee.Id GROUP BY Project.Id;");
         List<Report> reportList = new ArrayList<>();
 
         while (rs.next()){
             Report report = new Report(
-                    rs.getInt("ProjectId"),
+                    rs.getInt("Id"),
                     rs.getString("Name"),
                     rs.getString("DeliveryEmployees")
             );
@@ -82,9 +84,4 @@ public class ProjectDao {
         }
         return reportList;
     }
-
-
-
-
-
 }
