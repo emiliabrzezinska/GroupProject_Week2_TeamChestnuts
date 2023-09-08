@@ -1,12 +1,17 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.Employee;
+import org.kainos.ea.cli.SalesEmployee;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeDao {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
 
-    public int createDeliveryEmployee(EmployeeRequest employee) throws SQLException{
+    public int createDeliveryEmployee(EmployeeRequest employee) throws SQLException {
         Connection c = databaseConnector.getConnection();
         String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?)";
         PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
@@ -31,7 +36,7 @@ public class EmployeeDao {
 
     }
 
-    public int createSalesEmployee(SalesEmployeeRequest employee) throws SQLException{
+    public int createSalesEmployee(SalesEmployeeRequest employee) throws SQLException {
         Connection c = databaseConnector.getConnection();
         String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?)";
         PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
@@ -58,16 +63,13 @@ public class EmployeeDao {
     }
 
 
-
-
-
-    public List<DeliveryEmployee> getAllDeliveryEmployees() throws SQLException {
+    public List<Employee> getAllDeliveryEmployees() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId ;");
         List<DeliveryEmployee> DeliveryEmployeeList = new ArrayList<>();
 
-        while (rs.next()){
+        while (rs.next()) {
             DeliveryEmployee deliveryEmployee = new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
@@ -80,13 +82,13 @@ public class EmployeeDao {
         return DeliveryEmployeeList;
     }
 
-    public List<SalesEmployee> getAllSalesEmployees() throws SQLException{
+    public List<Employee> getAllSalesEmployees() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate  FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId ;");
         List<SalesEmployee> SalesEmployeeList = new ArrayList<>();
 
-        while (rs.next()){
+        while (rs.next()) {
             SalesEmployee salesEmployee = new SalesEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
@@ -101,13 +103,13 @@ public class EmployeeDao {
         return SalesEmployeeList;
     }
 
-    public DeliveryEmployee getDeliveryEmployeeById(int id) throws SQLException{
+    public DeliveryEmployee getDeliveryEmployeeById(int id) throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID=" + id);
 
 
-        while (rs.next()){
+        while (rs.next()) {
             return new DeliveryEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
@@ -119,12 +121,12 @@ public class EmployeeDao {
         return null;
     }
 
-    public SalesEmployee getSalesEmployeeById(int id) throws SQLException{
+    public SalesEmployee getSalesEmployeeById(int id) throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId WHERE Employee.ID=" +id);
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId WHERE Employee.ID=" + id);
 
-        while (rs.next()){
+        while (rs.next()) {
             return new SalesEmployee(
                     rs.getInt("EmployeeId"),
                     rs.getString("Name"),
@@ -137,7 +139,7 @@ public class EmployeeDao {
         return null;
     }
 
-    public void updateSalesEmployee(int id, SalesEmployee employee) throws SQLException{
+    public void updateSalesEmployee(int id, SalesEmployee employee) throws SQLException {
         Connection c = databaseConnector.getConnection();
         String updateStatement = "UPDATE SalesEmployee SET Name = ?, Salary = ?, BankAccountNumber = ?, CommissionRate = ? WHERE EmployeeId = ?";
         PreparedStatement st = c.prepareStatement(updateStatement);
@@ -152,7 +154,7 @@ public class EmployeeDao {
 
     }
 
-    public void updateDeliveryEmployee(int id, DeliveryEmployee employee) throws SQLException{
+    public void updateDeliveryEmployee(int id, DeliveryEmployee employee) throws SQLException {
         Connection c = databaseConnector.getConnection();
         String updateStatement = "UPDATE DeliveryEmployee SET Name = ?, Salary = ?, BankAccountNumber = ? WHERE EmployeeId = ?";
         PreparedStatement st = c.prepareStatement(updateStatement);
@@ -166,7 +168,7 @@ public class EmployeeDao {
 
     }
 
-    public void deleteEmployee(int id, Employee employee) throws SQLException{
+    public void deleteEmployee(int id) throws SQLException {
         Connection c = databaseConnector.getConnection();
         String deleteStatement = "DELETE FROM Employee WHERE Id = ?";
         PreparedStatement st = c.prepareStatement(deleteStatement);
