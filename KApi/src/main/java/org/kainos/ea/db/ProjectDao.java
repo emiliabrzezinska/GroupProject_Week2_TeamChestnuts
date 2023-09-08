@@ -2,72 +2,85 @@ package org.kainos.ea.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectDao {
+    private DatabaseConnector databaseConnector = new DatabaseConnector();
 
-    public Project getProjectById(int id) throws SQLException {
+    public int assignDeliveryEmployees(int ProjectId, List<Integer> EmployeeIds) throws SQLException {
         Connection c = databaseConnector.getConnection();
-        Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Name FROM Project WHERE Id=" +id);
+        for ( int EmployeeId : EmployeeIds) {
+            String insertStatement = "INSERT INTO Project_DeliveryEmployee (ProjectId, EmployeeId, IsActive) VALUES (?,?,?)";
+            PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
 
-        while (rs.next()){
-            return new Project(
-                    rs.getString("Name")
-            );
+            st.setInt(1, ProjectId);
+            st.setInt(2, EmployeeId);
+            st.setInt(3, 1);
+            st.executeUpdate();
+
+            ResultSet rs = st.getGeneratedKeys();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         }
-        return null;
+        return -1;
     }
 
-    public void assignDeliveryEmployee(int ProjectId, int EmployeeId) throws SQLException{
+    public void removeEmployee (int ProjectId, int EmployeeId) throws SQLException{
         Connection c = databaseConnector.getConnection();
-        String updateStatement = "INSERT INTO Project_DeliveryEmployee (ProjectId, EmployeeId, IsActive) VALUES (?,?,?) ";
-        PreparedStatement st =c.prepareStatement(updateStatement);
-        st.setInt(1, ProjectId);
-        st.setInt(2, EmployeeId);
-        st.setInt(3, 1);
 
-        st.executeUpdate();
-    }
+        String updateStatement = "UPDATE Product SET IsActive = ? WHERE ProjectId= ? AND EmployeeId = ?";
+        PreparedStatement st = c.prepareStatement(updateStatement);
 
-    public void removeDeliveryEmployee(int ProjectId, int EmployeeId) throws SQLException{
-        Connection c = databaseConnector.getConnection();
-        String updateStatement = "UPDATE Project_DeliveryEmployee SET IsActive = ? WHERE ProjectId = ? AND EmployeeID = ?";
-        PreparedStatement st =c.prepareStatement(updateStatement);
         st.setInt(1, 0);
         st.setInt(2, ProjectId);
         st.setInt(3, EmployeeId);
-
         st.executeUpdate();
     }
 
+
+
+
+
     public void assignClientToProject(int ProjectId, int ClientId) throws SQLException{
         Connection c = databaseConnector.getConnection();
-        String updateStatement = "UPDATE Project SET ClientID = ? WHERE Id = ?";
-        PreparedStatement st =c.prepareStatement(updateStatement);
+
+        String updateStatement = "UPDATE Project SET ClientId = ? WHERE ProjectId = ? ";
+        PreparedStatement st = c.prepareStatement(updateStatement);
+
         st.setInt(1, ClientId);
         st.setInt(2, ProjectId);
         st.executeUpdate();
     }
 
+    public void setProjectAsCompleted(int ProjectId) throws SQLException{
+        Connection c = databaseConnector.getConnection();
 
+        String updateStatement = "UPDATE Project SET IsCompleted = ? WHERE ProjectId = ? ";
+        PreparedStatement st = c.prepareStatement(updateStatement);
 
+        st.setInt(1, 1);
+        st.setInt(2, ProjectId);
+        st.executeUpdate();
 
-    public List<ProjectReport> getprojectreports(int ProjectId) throws SQLException{
+    }
+
+    public List<Report> getProjectReport() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Project.Name, group_concat( DeliveryEmployee.EmployeeId separator " , ") FROM Project INNER JOIN Project_DeliveryEmployee ON Project.Id = Project_DeliveryEmployee.ProjectId INNER JOIN DeliveryEmployee ON Project_DeliveryEmployee.EmployeeId = DeliveryEmployee.EmployeeId GROUP BY Project.Name");
-                List<ProjectReport> projectReport = new ArrayList<>();
+        ResultSet rs = st.executeQuery("SELECT Project.Id, Employee.Name, GROUP_CONCAT( DeliveryEmployee.EmployeeId SEPARATOR ' , ') FROM Project INNER JOIN Project_DeliveryEmployee ON Project.Id = Project_DeliveryEmployee.ProjectId INNER JOIN Employee ON Project.TechLeadId = Employee.Id GROUP BY Project.Id;");
+        List<Report> reportList = new ArrayList<>();
 
         while (rs.next()){
-            Project ProjectReport = new projectReport(
-                    rs.getString("Project.Name"),
-
-
-
+            Report report = new Report(
+                    rs.getInt("ProjectId"),
+                    rs.getString("Name"),
+                    rs.getString("DeliveryEmployees")
             );
-            SalesEmployeeList.add(salesEmployee);
+            reportList.add(report);
         }
-        return SalesEmployeeList;
+        return reportList;
     }
 
 

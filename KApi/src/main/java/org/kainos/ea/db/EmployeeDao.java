@@ -10,11 +10,12 @@ public class EmployeeDao {
     public List<DeliveryEmployee> getAllDeliveryEmployees() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId ;");
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId ;");
         List<DeliveryEmployee> DeliveryEmployeeList = new ArrayList<>();
 
         while (rs.next()){
             DeliveryEmployee deliveryEmployee = new DeliveryEmployee(
+                    rs.getInt("EmployeeId"),
                     rs.getString("Name"),
                     rs.getDouble("Salary"),
                     rs.getString("BankAccountNumber"),
@@ -28,11 +29,12 @@ public class EmployeeDao {
     public List<SalesEmployee> getAllSalesEmployees() throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate  FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId ;");
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate  FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId ;");
         List<SalesEmployee> SalesEmployeeList = new ArrayList<>();
 
         while (rs.next()){
             SalesEmployee salesEmployee = new SalesEmployee(
+                    rs.getInt("EmployeeId"),
                     rs.getString("Name"),
                     rs.getDouble("Salary"),
                     rs.getString("BankAccountNumber"),
@@ -48,11 +50,12 @@ public class EmployeeDao {
     public DeliveryEmployee getDeliveryEmployeeById(int id) throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber FROM Employee INNER JOIN DeliveryEmployee ON Employee.Id = DeliveryEmployee.EmployeeId WHERE Employee.ID="+id);
 
 
         while (rs.next()){
             return new DeliveryEmployee(
+                    rs.getInt("EmployeeId"),
                     rs.getString("Name"),
                     rs.getDouble("Salary"),
                     rs.getString("BankAccountNumber"),
@@ -65,10 +68,11 @@ public class EmployeeDao {
     public SalesEmployee getSalesEmployeeById(int id) throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId WHERE Employee.ID=" +id);
+        ResultSet rs = st.executeQuery("SELECT EmployeeId, Name, Salary, BankAccountNumber, NationalInsuranceNumber, CommissionRate FROM Employee INNER JOIN SalesEmployee ON Employee.Id = SalesEmployee.EmployeeId WHERE Employee.ID=" +id);
 
         while (rs.next()){
             return new SalesEmployee(
+                    rs.getInt("EmployeeId"),
                     rs.getString("Name"),
                     rs.getDouble("Salary"),
                     rs.getString("BankAccountNumber"),
