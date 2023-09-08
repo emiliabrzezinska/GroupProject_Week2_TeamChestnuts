@@ -1,14 +1,16 @@
 package org.kainos.ea.api;
 
 
+import org.kainos.ea.cli.*;
 import org.kainos.ea.client.*;
 
 import java.sql.SQLException;
 
-import org.kainos.ea.cli.Client;
-import org.kainos.ea.cli.DeliveryEmployee;
-import org.kainos.ea.cli.Project;
+import org.kainos.ea.db.ClientDao;
+import org.kainos.ea.db.EmployeeDao;
+import org.kainos.ea.db.ProjectDao;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -16,6 +18,7 @@ public class ProjectService {
 
     private ProjectDao projectDao = new ProjectDao();
     private ClientDao clientDao = new ClientDao();
+    private EmployeeDao employeeDao = new EmployeeDao();
 
     public List<Project> getAllProjects() throws FailedToGetProjectsException {
         try {
@@ -47,7 +50,7 @@ public class ProjectService {
                 if (deliveryEmployeeToAssign == null) {
                     throw new DeliveryEmployeeDoesNotExistException();
                 }
-                projectDao.assignDeliveryEmployeeToProject(employeeId, projectId);
+                projectDao.assignDeliveryEmployees(employeeId, Collections.singletonList(projectId));
             }
         } catch (SQLException | DeliveryEmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
