@@ -1,17 +1,10 @@
 package org.kainos.ea.api;
-
-
 import org.kainos.ea.client.*;
-
 import java.sql.SQLException;
-
 import org.kainos.ea.cli.Client;
 import org.kainos.ea.cli.DeliveryEmployee;
 import org.kainos.ea.cli.Project;
-
 import java.util.List;
-
-
 public class ProjectService {
 
     public List<Project> getAllProjects() throws FailedToGetProjectsException {
