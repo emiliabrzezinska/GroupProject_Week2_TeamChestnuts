@@ -14,6 +14,9 @@ import java.util.List;
 
 public class ProjectService {
 
+    private ProjectDao projectDao = new ProjectDao();
+    private ClientDao clientDao = new ClientDao();
+
     public List<Project> getAllProjects() throws FailedToGetProjectsException {
         try {
             List<Project> projectList = projectDao.getAllProjects();
@@ -53,17 +56,19 @@ public class ProjectService {
 
     }
 
-    public void removeDeliveryEmployee(int employeeId, int projectId) throws FailedToRemoveDeliveryEmployeeException, FailedToUpdateProjectException {
+    public void removeEmployee(int employeeId, int projectId) throws FailedToRemoveEmployeeException, FailedToUpdateProjectException {
         try {
-            DeliveryEmployee deliveryEmployeeToRemove = employeeDao.getEmployeeById(employeeId);
-            if (deliveryEmployeeToRemove == null) {
-                throw new DeliveryEmployeeDoesNotExistException();
+            Employee EmployeeToRemove = employeeDao.getEmployeeById(employeeId);
+            if (EmployeeToRemove == null) {
+                throw new EmployeeDoesNotExistException();
             }
 
-            projectDao.removeDeliveryEmployeeFromProject(employeeId, projectId);
+            projectDao.removeEmployee(employeeId, projectId);
         } catch (SQLException | DeliveryEmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
             throw new FailedToUpdateProjectException();
+        } catch (EmployeeDoesNotExistException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -95,10 +100,10 @@ public class ProjectService {
         }
     }
 
-    public double sumClientProjectValue() throws FailedToGetClientProjectValueException, FailedToGetTotalValueOfProjectsException {
+    public ClientValue getClientWithHighestValue() throws FailedToGetClientProjectValueException, FailedToGetTotalValueOfProjectsException {
         try {
-            double totalValueOfProjects = calculateTotalValue();
-            return totalValueOfProjects;
+            ClientValue getClientWithHighestValue = clientDao.getClientWithHighestValue();
+            return getClientWithHighestValue;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
 
@@ -136,6 +141,26 @@ public class ProjectService {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new FailedToGetDeliveryEmployeesAssignedToProject();
+        }
+    }
+
+    public List<Report> getClientReport() throws FailedToGetClientReportException {
+        try {
+            List<Report> clientReport = clientDao.getClientReport();
+            return clientReport;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetClientReportException();
+        }
+    }
+
+    public List<Report> getProjectReport() throws FailedToGetProjectReport {
+        try {
+            List<Report> projectReport = projectDao.getProjectReport();
+            return projectReport;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetProjectReport();
         }
     }
 }
