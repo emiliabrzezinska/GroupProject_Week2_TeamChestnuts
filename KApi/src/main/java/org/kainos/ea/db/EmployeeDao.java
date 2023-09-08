@@ -18,9 +18,13 @@ public class EmployeeDao {
 
         st.executeUpdate();
         ResultSet rs = st.getGeneratedKeys();
+        String insertStatement2 = "INSERT INTO DeliveryEmployee (EmployeeId) VALUES ( ? )";
 
         if (rs.next()) {
-            return rs.getInt(1);
+            int id = rs.getInt(1);
+            PreparedStatement st2 = c.prepareStatement(insertStatement2, Statement.RETURN_GENERATED_KEYS);
+            st2.setInt(1, id);
+            st2.executeUpdate();
         }
         return -1;
 
@@ -28,20 +32,25 @@ public class EmployeeDao {
 
     public int createSalesEmployee(SalesEmployeeRequest employee) throws SQLException{
         Connection c = databaseConnector.getConnection();
-        String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?); INSERT INTO SalesEmployee (EmployeeId, CommissionRate) VALUES (?, ?)";
+        String insertStatement = "INSERT INTO Employee (Id, Name, Salary, BankAccountNumber, NationalInsuranceNumber) VALUES (?,?,?,?,?)";
         PreparedStatement st = c.prepareStatement(insertStatement, Statement.RETURN_GENERATED_KEYS);
         st.setInt(1, employee.getId());
         st.setString(2, employee.getName());
         st.setFloat(3, employee.getSalary());
         st.setString(4, employee.getBankAccountNumer());
         st.setString(5, employee.getNationalInsuranceNumber());
-        st.setInt(6, employee.getId());
-        st.setFloat(7, employee.getCommissionRate());
         st.executeUpdate();
         ResultSet rs = st.getGeneratedKeys();
 
+        String insertStatement2 = "INSERT INTO SalesEmployee (EmployeeId, CommissionRate) VALUES (?, ?)";
+
+
         if (rs.next()) {
-            return rs.getInt(1);
+            int id = rs.getInt(1);
+            PreparedStatement st2 = c.prepareStatement(insertStatement2, Statement.RETURN_GENERATED_KEYS);
+            st2.setInt(1, id);
+            st2.setFloat(2, employee.getCommissionRate());
+            st2.executeUpdate();
         }
         return -1;
     }
