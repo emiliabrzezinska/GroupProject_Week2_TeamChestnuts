@@ -11,12 +11,12 @@ public class ClientDao {
     public List<Report> getClientReport() throws SQLException {
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Client.Id, Employee.Name, GROUP_CONCAT( Project.Id SEPARATOR ' , ') FROM Client INNER JOIN Employee ON Client.SalesRepresentativeId = Employee.Id INNER JOIN Project ON Client.Id = Project.ClientId WHERE Project.IsCompleted != 1 GROUP BY Client.Id;");
+        ResultSet rs = st.executeQuery("SELECT Client.Id, Employee.Name, GROUP_CONCAT( Project.Id SEPARATOR ' , ') as 'Projects' FROM Client INNER JOIN Employee ON Client.SalesRepresentativeId = Employee.Id INNER JOIN Project ON Client.Id = Project.ClientId WHERE Project.IsCompleted != 1 GROUP BY Client.Id;");
         List<Report> reportList = new ArrayList<>();
 
         while (rs.next()){
             Report report = new Report(
-                    rs.getInt("ClientId"),
+                    rs.getInt("Id"),
                     rs.getString("Name"),
                     rs.getString("Projects")
             );
@@ -28,12 +28,12 @@ public class ClientDao {
     public ClientValue getClientWithHighestValue() throws SQLException{
         Connection c = databaseConnector.getConnection();
         Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT Client.Name, SUM(Project.Value) FROM Client LEFT JOIN Project ON Client.Id = Project.ClientId ) GROUP BY Client.Name ORDER BY SUM(VALUE) DESC LIMIT 1;" );
+        ResultSet rs = st.executeQuery("SELECT Client.Name, SUM(Project.Value) as 'Value' FROM Client LEFT JOIN Project ON Client.Id = Project.ClientId ) GROUP BY Client.Name ORDER BY SUM(VALUE) DESC LIMIT 1;" );
 
         while(rs.next()){
             return new ClientValue(
                     rs.getString("Name"),
-                    rs.getDouble("Salary")
+                    rs.getDouble("Value")
             );
         }
         return null;
