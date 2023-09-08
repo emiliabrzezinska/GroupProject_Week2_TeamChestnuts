@@ -16,6 +16,32 @@ public class EmployeeService {
 
     private EmployeeDao employeeDao = new EmployeeDao();
 
+    public int createDeliveryEmployee(EmployeeRequest employee) throws FailedToCreateDeliveryEmployeeException {
+        try {
+            int id = employeeDao.createEmployee(employee);
+            if (id == -1) {
+                throw new FailedToCreateDeliveryEmployeeException();
+            }
+            return id;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToCreateDeliveryEmployeeException();
+        }
+    }
+
+    public int createSalesEmployee(EmployeeRequest employee) throws FailedToCreateSalesEmployeeException {
+        try {
+            int id = employeeDao.createEmployee(employee);
+            if (id == -1) {
+                throw new FailedToCreateSalesEmployeeException();
+            }
+            return id;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToCreateSalesEmployeeException();
+        }
+    }
+
     public List<Employee> getAllEmployees() throws FailedToGetEmployeeListException {
         try {
             List<Employee> employeeList = employeeDao.getAllEmployees();
