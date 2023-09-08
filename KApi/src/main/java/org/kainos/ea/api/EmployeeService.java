@@ -17,7 +17,7 @@ public class EmployeeService {
 
     public int createDeliveryEmployee(EmployeeRequest employee) throws FailedToCreateDeliveryEmployeeException {
         try {
-            int id = employeeDao.createEmployee(employee);
+            int id = employeeDao.createDeliveryEmployee(employee);
             if (id == -1) {
                 throw new FailedToCreateDeliveryEmployeeException();
             }
@@ -30,7 +30,7 @@ public class EmployeeService {
 
     public int createSalesEmployee(SalesEmployeeRequest employee) throws FailedToCreateSalesEmployeeException {
         try {
-            int id = employeeDao.createEmployee(employee);
+            int id = employeeDao.createSalesEmployee(employee);
             if (id == -1) {
                 throw new FailedToCreateSalesEmployeeException();
             }
@@ -124,7 +124,7 @@ public class EmployeeService {
         }
     }
 
-    public void updateDeliveryEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateDeliveryEmployeeException {
+    public void updateDeliveryEmployee(int employeeId, DeliveryEmployee employee) throws FailedToUpdateDeliveryEmployeeException {
         try {
             Employee deliveryEmployeeToUpdate = employeeDao.getEmployeeById(employeeId);
 
@@ -140,7 +140,7 @@ public class EmployeeService {
 
     }
 
-    public void updateSalesEmployee(int employeeId, EmployeeRequest employee) throws FailedToUpdateSalesEmployeeException {
+    public void updateSalesEmployee(int employeeId, SalesEmployee employee) throws FailedToUpdateSalesEmployeeException {
         try {
             Employee salesEmployeeToUpdate = employeeDao.getEmployeeById(employeeId);
 
