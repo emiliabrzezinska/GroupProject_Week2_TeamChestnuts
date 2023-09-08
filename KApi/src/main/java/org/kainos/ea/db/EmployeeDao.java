@@ -161,7 +161,6 @@ public class EmployeeDao {
         PreparedStatement st = c.prepareStatement(updateStatement);
 
         st.setString(1, employee.getName());
-        st.setFloat(2, employee.getSalary());
         st.setString(3, employee.getBankAccountNumber());
         st.setInt(4, id);
 

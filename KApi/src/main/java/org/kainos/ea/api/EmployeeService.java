@@ -1,13 +1,11 @@
 package org.kainos.ea.api;
 
 
+import org.kainos.ea.cli.*;
 import org.kainos.ea.client.*;
 
 import java.sql.SQLException;
 
-import org.kainos.ea.cli.DeliveryEmployee;
-import org.kainos.ea.cli.Employee;
-import org.kainos.ea.cli.SalesEmployee;
 import org.kainos.ea.db.EmployeeDao;
 
 

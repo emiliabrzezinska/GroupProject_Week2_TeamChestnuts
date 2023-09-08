@@ -1,7 +1,6 @@
 package org.kainos.ea.api;
 
 
-import org.kainos.ea.cli.*;
 import org.kainos.ea.client.*;
 
 import java.sql.SQLException;
