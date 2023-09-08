@@ -36,7 +36,7 @@ public class ClientDao {
         while(rs.next()){
             return new ClientValue(
                     rs.getString("Name"),
-                    rs.getDouble("Value")
+                    rs.getFloat("Value")
             );
         }
         return null;
