@@ -138,4 +138,14 @@ public class ProjectService {
             throw new FailedToGetDeliveryEmployeesAssignedToProject();
         }
     }
+
+    public List<Report> getClientReport() throws FailedToGetClientReportException {
+        try {
+            List<Report> clientReport = clientDao.getClientReport();
+            return clientReport;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetClientReportException();
+        }
+    }
 }
