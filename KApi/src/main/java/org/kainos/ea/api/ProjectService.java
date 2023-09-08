@@ -37,14 +37,15 @@ public class ProjectService {
         }
     }
 
-    public void assignDeliveryEmployee(int employeeId, int projectId) throws FailedToGetDeliveryEmployeeException, FailedToAssignDeliveryEmployeeException {
+    public void assignDeliveryEmployees(List<Integer> employeeIds, int projectId) throws FailedToGetDeliveryEmployeeException, FailedToAssignDeliveryEmployeeException {
         try {
-            DeliveryEmployee deliveryEmployeeToAssign = employeeDao.getEmployeeById(employeeId);
-            if (deliveryEmployeeToAssign == null) {
-                throw new DeliveryEmployeeDoesNotExistException();
+            for (int employeeId : employeeIds) {
+                DeliveryEmployee deliveryEmployeeToAssign = employeeDao.getEmployeeById(employeeId);
+                if (deliveryEmployeeToAssign == null) {
+                    throw new DeliveryEmployeeDoesNotExistException();
+                }
+                projectDao.assignDeliveryEmployeeToProject(employeeId, projectId);
             }
-
-            projectDao.assignDeliveryEmployeeToProject(employeeId, projectId);
         } catch (SQLException | DeliveryEmployeeDoesNotExistException e) {
             System.err.println(e.getMessage());
             throw new FailedToAssignDeliveryEmployeeException();
