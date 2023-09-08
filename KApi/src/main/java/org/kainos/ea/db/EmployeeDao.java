@@ -1,7 +1,11 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.DeliveryEmployee;
+import org.kainos.ea.cli.SalesEmployee;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeDao {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
