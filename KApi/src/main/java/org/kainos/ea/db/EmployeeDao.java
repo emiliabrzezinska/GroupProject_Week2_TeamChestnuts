@@ -25,6 +25,7 @@ public class EmployeeDao {
             PreparedStatement st2 = c.prepareStatement(insertStatement2, Statement.RETURN_GENERATED_KEYS);
             st2.setInt(1, id);
             st2.executeUpdate();
+            return id;
         }
         return -1;
 
@@ -51,6 +52,7 @@ public class EmployeeDao {
             st2.setInt(1, id);
             st2.setFloat(2, employee.getCommissionRate());
             st2.executeUpdate();
+            return id;
         }
         return -1;
     }
