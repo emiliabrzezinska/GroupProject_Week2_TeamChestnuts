@@ -1,5 +1,7 @@
 package org.kainos.ea.db;
 
+import org.kainos.ea.cli.DeliveryEmployee;
+
 import java.sql.*;
 import java.util.ArrayList;
 
